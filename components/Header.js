@@ -38,7 +38,7 @@ function Header() {
 
       <img
         loading="lazy"
-        className="cursor-pointer h-12 w-12 rounded-full ml-2"
+        className="hidden md:inline-flex cursor-pointer h-12 w-12 rounded-full ml-2"
         src="https://www.seriouseats.com/thmb/svo10-fbaHWS3AfGsoyoM6G5zPw=/960x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__2020__02__20200117-coca-cola-chicken-vicky-wasik-26-41493f82b338454e9fc05ed5b250b612.jpg"
         alt=""
       />
