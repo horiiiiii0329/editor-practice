@@ -29,13 +29,16 @@ export default function Home() {
             </Button>
           </div>
           <div>
-            <div className="relative h-52 w-40 border-2 cursor-pointer">
+            <div className="relative h-52 w-40 border-2 cursor-pointer cursor-pointer hover:border-blue-700">
               <Image src="https://links.papareact.com/pju" layout="fill" />
             </div>
-            <p>Blank</p>
+            <p className="ml-2 mt-2 font-semibold text-sm text-gray-700">
+              Blank
+            </p>
           </div>
         </div>
       </section>
+      <section></section>
     </div>
   );
 }
