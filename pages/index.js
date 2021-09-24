@@ -5,13 +5,52 @@ import Icon from "@material-tailwind/react/Icon";
 import Image from "next/image";
 import { getSession, useSession } from "next-auth/react";
 import Login from "../components/Login";
+import Modal from "@material-tailwind/react/Modal";
+import ModalBody from "@material-tailwind/react/ModalBody";
+import ModalFooter from "@material-tailwind/react/ModalFooter";
+import { useState } from "react";
 
 export default function Home() {
   const { data } = useSession();
+  const [showModal, setshowModal] = useState(false);
+  const [input, setInput] = useState("");
 
   if (!data) {
     return <Login></Login>;
   }
+
+  const modal = (
+    <Modal size="sm" active={showModal} toggler={() => setshowModal(false)}>
+      <ModalBody>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          type="text"
+          className="outline-none w-full"
+          placeholder="Enter name of a documenbt"
+          onKeyDown={(e) => e.key === "Enter" && createDocument()}
+        ></input>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          color="bule"
+          buttonType="link"
+          onClick={(e) => setshowModal(false)}
+          ripple="dark"
+        >
+          Cancel
+        </Button>
+        <Button
+          color="blue"
+          buttonType="link"
+          onClick={createDocument}
+          rirrple="light"
+        >
+          Create
+        </Button>
+      </ModalFooter>
+    </Modal>
+  );
 
   return (
     <div>
@@ -57,4 +96,14 @@ export default function Home() {
       </section>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  return {
+    props: {
+      session,
+    },
+  };
 }
