@@ -9,15 +9,27 @@ import Modal from "@material-tailwind/react/Modal";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import { useState } from "react";
+import { db } from "../firebase";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 export default function Home() {
-  const { data } = useSession();
+  const { session } = useSession();
   const [showModal, setshowModal] = useState(false);
   const [input, setInput] = useState("");
 
-  if (!data) {
-    return <Login></Login>;
-  }
+  const createDocument = () => {
+    if (!input) return;
+    addDoc(collection(db, "user"), {
+      fieldName: input,
+    });
+
+    setInput("");
+    setshowModal(false);
+  };
+
+  // if (!session) {
+  //   return <Login></Login>;
+  // }
 
   const modal = (
     <Modal size="sm" active={showModal} toggler={() => setshowModal(false)}>
@@ -60,6 +72,7 @@ export default function Home() {
       </Head>
 
       <Header />
+      {modal}
 
       <section className="bg-gray-100 pb-10 px-10 ">
         <div className="max-w-3xl mx-auto">
@@ -76,7 +89,10 @@ export default function Home() {
             </Button>
           </div>
           <div>
-            <div className="relative h-52 w-40 border-2 cursor-pointer hover:border-blue-700">
+            <div
+              onClick={() => setshowModal(true)}
+              className="relative h-52 w-40 border-2 cursor-pointer hover:border-blue-700"
+            >
               <Image src="https://links.papareact.com/pju" layout="fill" />
             </div>
             <p className="ml-2 mt-2 font-semibold text-sm text-gray-700">
