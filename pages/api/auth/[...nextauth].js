@@ -13,5 +13,4 @@ export default NextAuth({
 
     // ...add more providers here
   ],
-  adapter: FirebaseAdapter(db),
 });
