@@ -26,13 +26,26 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [snapShot, setSnapShot] = useState([]);
 
-  useEffect(
-    () =>
-      onSnapshot(collection(db, "userDoc"), (snapshot) => {
-        setSnapShot(snapshot.docs.map((doc) => doc.data()));
-      }),
-    []
-  );
+  useEffect(() => {
+    const docs = [];
+    getDocs(collection(db, "userDoc")).then((snapshot) => {
+      snapshot.docs.forEach((note) => {
+        let currentID = note.id;
+        let appObj = { ...note.data(), ["id"]: currentID };
+        docs.push(appObj);
+      });
+
+      setSnapShot(docs);
+    });
+    // onSnapshot(collection(db, "userDoc"), (snapshot) => {
+    //   setSnapShot(
+    //     snapshot.docs.map((doc) => {
+    //       doc.data();
+    //     })
+    //   );
+    // });
+  }, []);
+  console.log(snapShot);
 
   const createDocument = () => {
     if (!input) return;

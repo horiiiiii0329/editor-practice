@@ -11,7 +11,6 @@ function DocumentRow({ id, fieldName, date }) {
       className="flex items-center p-4 rounded-lg hover:bg-gray-100 text-gray-700 text-sm cursor-pointer"
     >
       <Icon name="article" size="3xl" color="blue" />
-      {id}
       <p className="flex-grow pl-5 w-10 pr-1- truncate">{fieldName}</p>
       <p className="pr-5 tex-sm">{date.toDate().toLocaleDateString()}</p>
 
