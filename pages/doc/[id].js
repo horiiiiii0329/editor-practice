@@ -7,6 +7,7 @@ import { useState } from "react";
 import Login from "../../components/Login";
 import { router } from "../../.next/static/chunks/main";
 import { getDoc, doc } from "firebase/firestore";
+import Button from "@material-tailwind/react/Button";
 
 function Doc() {
   const [note, setNote] = useState([]);
@@ -39,7 +40,27 @@ function Doc() {
             <p className="option">Tools</p>
           </div>
         </div>
+
+        <Button
+          color="lightBlue"
+          buttonType="filled"
+          className="hidden md:inline-flex h-10"
+          rounded={false}
+          block={false}
+          iconOnly={false}
+          ripple="light"
+        >
+          <Icon name="people" size="md" />
+          SHARE
+        </Button>
+        <img
+          className="rounded-full cursor-pointer h-10 w-10 ml-2"
+          src={session.user.image}
+          alt=""
+        />
       </header>
+
+      <TextEditor />
     </div>
   );
 }
