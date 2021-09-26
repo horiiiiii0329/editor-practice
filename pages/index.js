@@ -9,34 +9,35 @@ import Login from "../components/Login";
 import Modal from "@material-tailwind/react/Modal";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { Timestamp, getDocs, collection, addDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  getDocs,
+  collection,
+  addDoc,
+  onSnapshot,
+} from "firebase/firestore";
 
 export default function Home() {
   const { session } = useSession();
   const [showModal, setshowModal] = useState(false);
   const [input, setInput] = useState("");
+  const [snapShot, setSnapShot] = useState([]);
 
-  const snapShot = getDocs(collection(db, "userDoc"));
-
-  useEffect(() => {
-    const querySnapshot = getDocs(collection(db, "userDoc"));
-    return () => {
-      cleanup;
-    };
-  }, [input]);
-
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-  });
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "userDoc"), (snapshot) => {
+        setSnapShot(snapshot.docs.map((doc) => doc.data()));
+      }),
+    []
+  );
 
   const createDocument = () => {
     if (!input) return;
     addDoc(collection(db, "userDoc"), {
       fieldName: input,
-      timestamp: Timestamp.fromDate(new Date()),
+      timestamp: Timestamp.now(),
     });
 
     setInput("");
@@ -126,8 +127,8 @@ export default function Home() {
             <DocumentRow
               key={doc.id}
               id={doc.id}
-              fieldName={doc.data().fieldName}
-              date={doc.data().timestamp}
+              fieldName={doc.fieldName}
+              date={doc.timestamp.toLocaleString()}
             />
           ))}
       </section>
