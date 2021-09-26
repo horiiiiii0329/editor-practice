@@ -5,12 +5,11 @@ import { db } from "../../firebase";
 import { getSession, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import Login from "../../components/Login";
-import { router } from "../../.next/static/chunks/main";
 import { getDoc, doc } from "firebase/firestore";
 import Button from "@material-tailwind/react/Button";
+import TextEditor from "../../components/TextEditor";
 
 function Doc() {
-  const [note, setNote] = useState([]);
   const { data: session, status } = useSession();
   const router = useRouter();
   const { id } = router.query;
