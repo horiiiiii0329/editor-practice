@@ -5,7 +5,7 @@ import { SessionProvider } from "next-auth/react";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <SessionProvider>
       <Head>
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -18,10 +18,9 @@ function MyApp({ Component, pageProps }) {
           crossOrigin="anonymous"
         />
       </Head>
-      <SessionProvider>
-        <Component {...pageProps} />
-      </SessionProvider>
-    </>
+
+      <Component {...pageProps} />
+    </SessionProvider>
   );
 }
 

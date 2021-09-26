@@ -21,7 +21,7 @@ import {
 } from "firebase/firestore";
 
 export default function Home() {
-  const { session } = useSession();
+  const { data: session, status } = useSession();
   const [showModal, setshowModal] = useState(false);
   const [input, setInput] = useState("");
   const [snapShot, setSnapShot] = useState([]);
@@ -78,6 +78,8 @@ export default function Home() {
     </Modal>
   );
 
+  if (status === "unauthenticated") return <Login />;
+
   return (
     <div>
       <Head>
@@ -122,16 +124,16 @@ export default function Home() {
             <p className="mr-12">Date Created</p>
             <Icon name="folder" size="3xl" color="gray" />
           </div>
+          {snapShot.length &&
+            snapShot.map((doc) => (
+              <DocumentRow
+                key={doc.id}
+                id={doc.id}
+                fieldName={doc.fieldName}
+                date={doc.timestamp}
+              />
+            ))}
         </div>
-        {snapShot.length &&
-          snapShot.map((doc) => (
-            <DocumentRow
-              key={doc.id}
-              id={doc.id}
-              fieldName={doc.fieldName}
-              date={doc.timestamp}
-            />
-          ))}
       </section>
     </div>
   );
