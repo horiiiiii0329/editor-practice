@@ -17,6 +17,7 @@ import {
   collection,
   addDoc,
   onSnapshot,
+  FieldValue,
 } from "firebase/firestore";
 
 export default function Home() {
@@ -37,7 +38,7 @@ export default function Home() {
     if (!input) return;
     addDoc(collection(db, "userDoc"), {
       fieldName: input,
-      timestamp: Timestamp.now(),
+      timestamp: Timestamp.fromDate(new Date()),
     });
 
     setInput("");
@@ -128,7 +129,7 @@ export default function Home() {
               key={doc.id}
               id={doc.id}
               fieldName={doc.fieldName}
-              date={doc.timestamp.toLocaleString()}
+              date={doc.timestamp}
             />
           ))}
       </section>
