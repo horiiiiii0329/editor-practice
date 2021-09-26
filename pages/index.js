@@ -4,47 +4,44 @@ import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
 import Image from "next/image";
 import { getSession, useSession } from "next-auth/react";
+import DocumentRow from "../components/DocumentRow";
 import Login from "../components/Login";
 import Modal from "@material-tailwind/react/Modal";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import { useState } from "react";
 import { db } from "../firebase";
-import {
-  collection,
-  addDoc,
-  Timestamp,
-  getDoc,
-  collection,
-} from "firebase/firestore";
-import { useCollectionOnce } from "react-firebase-hooks";
+import { Timestamp, getDocs, collection, addDoc } from "firebase/firestore";
 
 export default function Home() {
   const { session } = useSession();
   const [showModal, setshowModal] = useState(false);
   const [input, setInput] = useState("");
-  const [snapshot] = useCollectionOnce(
-    db
-      .collection("userDocs")
-      .doc(session.user.email)
-      .collection("docs")
-      .orderBy("timestamp", "desc")
-  );
+
+  const snapShot = getDocs(collection(db, "userDoc"));
+
+  useEffect(() => {
+    const querySnapshot = getDocs(collection(db, "userDoc"));
+    return () => {
+      cleanup;
+    };
+  }, [input]);
+
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
+  });
 
   const createDocument = () => {
     if (!input) return;
-    addDoc(collection(db, session.user.email), {
+    addDoc(collection(db, "userDoc"), {
       fieldName: input,
-      Timestamp,
+      timestamp: Timestamp.fromDate(new Date()),
     });
 
     setInput("");
     setshowModal(false);
   };
-
-  // if (!session) {
-  //   return <Login></Login>;
-  // }
 
   const modal = (
     <Modal size="sm" active={showModal} toggler={() => setshowModal(false)}>
@@ -124,14 +121,15 @@ export default function Home() {
             <Icon name="folder" size="3xl" color="gray" />
           </div>
         </div>
-        {snapshot?.docs.map((doc) => (
-          <DocumentRow
-            key={doc.id}
-            id={doc.id}
-            fileName={doc.data().fieldName}
-            data={doc.data().timestamp}
-          />
-        ))}
+        {snapShot.length &&
+          snapShot.map((doc) => (
+            <DocumentRow
+              key={doc.id}
+              id={doc.id}
+              fieldName={doc.data().fieldName}
+              date={doc.data().timestamp}
+            />
+          ))}
       </section>
     </div>
   );
