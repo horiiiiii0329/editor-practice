@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
 import Image from "next/image";
-import { getSession, useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/client";
 import DocumentRow from "../components/DocumentRow";
 import Login from "../components/Login";
 import Modal from "@material-tailwind/react/Modal";
@@ -11,14 +11,6 @@ import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
-import {
-  Timestamp,
-  getDocs,
-  collection,
-  addDoc,
-  onSnapshot,
-  FieldValue,
-} from "firebase/firestore";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -26,32 +18,33 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [snapShot, setSnapShot] = useState([]);
 
-  useEffect(() => {
-    const docs = [];
-    getDocs(collection(db, "userDoc")).then((snapshot) => {
-      snapshot.docs.forEach((note) => {
-        let currentID = note.id;
-        let appObj = { ...note.data(), ["id"]: currentID };
-        docs.push(appObj);
-      });
+  // useEffect(() => {
+  //   const docs = [];
+  //   getDocs(collection(db, "userDoc")).then((snapshot) => {
+  //     snapshot.docs.forEach((note) => {
+  //       let currentID = note.id;
+  //       let appObj = { ...note.data(), ["id"]: currentID };
+  //       docs.push(appObj);
+  //     });
 
-      setSnapShot(docs);
-    });
-    // onSnapshot(collection(db, "userDoc"), (snapshot) => {
-    //   setSnapShot(
-    //     snapshot.docs.map((doc) => {
-    //       doc.data();
-    //     })
-    //   );
-    // });
-  }, []);
-  console.log(snapShot);
+  //     setSnapShot(docs);
+  //   });
+  //   // onSnapshot(collection(db, "userDoc"), (snapshot) => {
+  //   //   setSnapShot(
+  //   //     snapshot.docs.map((doc) => {
+  //   //       doc.data();
+  //   //     })
+  //   //   );
+  //   // });
+  // }, []);
+  // console.log(snapShot);
 
   const createDocument = () => {
     if (!input) return;
-    addDoc(collection(db, "userDoc"), {
-      fieldName: input,
-      timestamp: Timestamp.fromDate(new Date()),
+
+    db.collection("userDocs").doc(session.user.email).collection("docs").add({
+      filleName: input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
 
     setInput("");
@@ -137,7 +130,7 @@ export default function Home() {
             <p className="mr-12">Date Created</p>
             <Icon name="folder" size="3xl" color="gray" />
           </div>
-          {snapShot.length &&
+          {/* {snapShot.length &&
             snapShot.map((doc) => (
               <DocumentRow
                 key={doc.id}
@@ -145,7 +138,7 @@ export default function Home() {
                 fieldName={doc.fieldName}
                 date={doc.timestamp}
               />
-            ))}
+            ))} */}
         </div>
       </section>
     </div>
