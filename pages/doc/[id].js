@@ -27,14 +27,10 @@ function Doc() {
           docs.push(appObj);
         });
       })
-      .then(console.log(docs.map((doc) => doc.fieldName)));
+      .then(console.log(docs));
 
     setSnapShot(docs);
   }, []);
-
-  // if (snapShot) {
-  //   setSnapShot(snapShot.filter((item) => item.id === id));
-  // }
 
   return (
     <div>
@@ -43,7 +39,7 @@ function Doc() {
           <Icon name="description" size="5xl" color="blue" />
         </span>
         <div className="flex-grow px-2">
-          <h2>{snapShot?.fieldName}</h2>
+          <h2>DUMMY_DATA</h2>
           <div className="flex items-center text-sm space-x-1 -ml-1 h-8 text-gray-600">
             <p className="option">File</p>
             <p className="option">Edit</p>
