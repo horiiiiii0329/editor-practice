@@ -1,1 +1,1 @@
-<h1> This is my project for practice using of firebase and rich text editor </h1>
+<h1> This is my project for using of firebase and rich text editor </h1>
