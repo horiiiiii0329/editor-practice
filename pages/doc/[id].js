@@ -2,7 +2,7 @@
 import Icon from "@material-tailwind/react/Icon";
 import { useRouter } from "next/dist/client/router";
 import { db } from "../../firebase";
-import { getSession, signOut, useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/client";
 import { useState, useEffect } from "react";
 import Login from "../../components/Login";
 import { collection, getDocs } from "firebase/firestore";

@@ -10,13 +10,24 @@ import Modal from "@material-tailwind/react/Modal";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import { useState, useEffect } from "react";
+import { useCollectionOnce } from "react-firebase-hooks/firestore";
 import { db } from "../firebase";
+import firebase from "firebase";
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const [session] = useSession();
+
+  if (!session) return <Login />;
+
   const [showModal, setshowModal] = useState(false);
   const [input, setInput] = useState("");
-  const [snapShot, setSnapShot] = useState([]);
+  const [snapShot] = useCollectionOnce(
+    db
+      .collection("userDocs")
+      .doc(session.user.email)
+      .collection("docs")
+      .orderBy("timestamp", "desc")
+  );
 
   // useEffect(() => {
   //   const docs = [];
@@ -84,8 +95,6 @@ export default function Home() {
     </Modal>
   );
 
-  if (status === "unauthenticated") return <Login />;
-
   return (
     <div>
       <Head>
@@ -130,15 +139,14 @@ export default function Home() {
             <p className="mr-12">Date Created</p>
             <Icon name="folder" size="3xl" color="gray" />
           </div>
-          {/* {snapShot.length &&
-            snapShot.map((doc) => (
-              <DocumentRow
-                key={doc.id}
-                id={doc.id}
-                fieldName={doc.fieldName}
-                date={doc.timestamp}
-              />
-            ))} */}
+          {snapShot?.docs.map((doc) => (
+            <DocumentRow
+              key={doc.id}
+              id={doc.id}
+              fieldName={doc.data().filleName}
+              date={doc.data().timestamp}
+            />
+          ))}
         </div>
       </section>
     </div>

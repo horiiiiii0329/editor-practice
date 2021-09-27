@@ -12,7 +12,7 @@ function DocumentRow({ id, fieldName, date }) {
     >
       <Icon name="article" size="3xl" color="blue" />
       <p className="flex-grow pl-5 w-10 pr-1- truncate">{fieldName}</p>
-      <p className="pr-5 tex-sm">{date.toDate().toLocaleDateString()}</p>
+      <p className="pr-5 tex-sm">{date?.toDate().toLocaleDateString()}</p>
 
       <Button
         color="gray"
