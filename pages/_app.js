@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
           crossOrigin="anonymous"
         /> */}
       </Head>
-      <Provider>
+      <Provider session={pageProps.session}>
         <Component {...pageProps} />
       </Provider>
     </>
