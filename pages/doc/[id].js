@@ -4,33 +4,22 @@ import { useRouter } from "next/dist/client/router";
 import { db } from "../../firebase";
 import { getSession, signOut, useSession } from "next-auth/client";
 import { useState, useEffect } from "react";
+import { useDocumentOnce } from "react-firebase-hooks/firestore";
 import Login from "../../components/Login";
 import { collection, getDocs } from "firebase/firestore";
 import Button from "@material-tailwind/react/Button";
 import TextEditor from "../../components/TextEditor";
 
 function Doc() {
-  const { data: session, status } = useSession();
+  const [session] = useSession();
+
+  if (!session) return <Login />;
+
   const router = useRouter();
   const { id } = router.query;
-  const [snapShot, setSnapShot] = useState([]);
-
-  if (status === "unauthenticated") return <Login />;
-
-  useEffect(() => {
-    let docs = [];
-    getDocs(collection(db, "userDoc"))
-      .then((snapshot) => {
-        snapshot.docs.forEach((note) => {
-          let currentID = note.id;
-          let appObj = { ...note.data(), ["id"]: currentID };
-          docs.push(appObj);
-        });
-      })
-      .then(console.log(docs));
-
-    setSnapShot(docs);
-  }, []);
+  const [snapShot] = useDocumentOnce(
+    db.collection("userDocs").doc(session.user.email).collection("docs").doc(id)
+  );
 
   return (
     <div>
@@ -39,7 +28,7 @@ function Doc() {
           <Icon name="description" size="5xl" color="blue" />
         </span>
         <div className="flex-grow px-2">
-          <h2>DUMMY_DATA</h2>
+          <h2>{snapShot?.data().filleName}</h2>
           <div className="flex items-center text-sm space-x-1 -ml-1 h-8 text-gray-600">
             <p className="option">File</p>
             <p className="option">Edit</p>
